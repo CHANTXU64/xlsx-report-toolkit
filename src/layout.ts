@@ -1,4 +1,4 @@
-import { N } from './number';
+import { BigNum as N } from './number';
 
 class Row {
   private _height: number;

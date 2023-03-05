@@ -1,4 +1,3 @@
-// import { Report } from "./report";
 import * as child from 'child_process';
 
 export class Utils {
