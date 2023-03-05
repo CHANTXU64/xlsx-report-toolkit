@@ -1,0 +1,32 @@
+{
+  "name": "xlsx-report-toolkit",
+  "version": "0.1.0",
+  "description": "xlsx report toolkit",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CHANTXU64/xlsx-report-toolkit.git"
+  },
+  "keywords": [
+    "xlsx",
+    "report"
+  ],
+  "author": "Chant Xu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/CHANTXU64/xlsx-report-toolkit/issues"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.1.1",
+    "lz4": "^0.6.5",
+    "csv-parse": "^5.3.6"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
