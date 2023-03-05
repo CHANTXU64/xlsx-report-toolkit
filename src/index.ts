@@ -4,5 +4,5 @@ export * from './sheet';
 export * from './report';
 export * from './process_data';
 export * from './number';
-export * from './layout';
+export * as Lo from './layout';
 

@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 
-export class N {
+export class BigNum {
   public static minus (...a: number[]): number {
     let d = new BigNumber(a[0]);
     for (let i = 1; i < a.length; ++i) {
