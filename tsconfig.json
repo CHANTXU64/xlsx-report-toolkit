@@ -1,15 +1,22 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2020",
+    "module": "CommonJS",
+    "target": "ES6",
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "preserveConstEnums": true,
     "removeComments": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "declarationMap": true
   },
   "include": [
-    "src/*"
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

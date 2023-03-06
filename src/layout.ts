@@ -50,16 +50,16 @@ export class Elem {
   protected _rows: Row[] = [];
   protected _heightAdjOrd: number;
   protected _height: number = 0;
-  protected _hgtAdjMaxRdc: number;
-  protected _hgtAdjMaxInc: number;
+  protected _hgtAdjMaxRdc: number = -1;
+  protected _hgtAdjMaxInc: number = -1;
   protected _hgtAdjAcc: number;
-  protected _hgtAdjMaxTimeRdc: number;
-  protected _hgtAdjMaxTimeInc: number;
+  protected _hgtAdjMaxTimeRdc: number = -1;
+  protected _hgtAdjMaxTimeInc: number = -1;
   protected _adjHgt: number = 0;
   protected _name: string;
   protected _type: ElemType;
   protected _cusHgt: boolean = false;
-  protected _tokenPageEnd: Elem;
+  protected _tokenPageEnd: Elem = new Elem(ElemType.tokenPageEnd, 0, 0, []);
 
   /** heightAdjOrd 默认以type准: empty与data为0, 其余为-1, 越大越先调整
    *  默认adjust max为[0, 0], 第一个为reduce, 第二个为increase
@@ -212,7 +212,7 @@ export type Page = Elem[];
 export class DataToken {
   protected _title: Elem;
   protected _data: Elem | DataToken[];
-  protected _empty: Elem;
+  protected _empty: Elem = new Elem(ElemType.empty, 0, 0, []);
   protected _pageEnd: Elem;
   protected _end: Elem;
   protected _emptyVisible: boolean = true;

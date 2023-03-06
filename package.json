@@ -1,8 +1,11 @@
 {
   "name": "xlsx-report-toolkit",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "xlsx report toolkit",
-  "main": "./src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "module": "dist/index.esm.js",
   "directories": {
     "test": "test"
   },

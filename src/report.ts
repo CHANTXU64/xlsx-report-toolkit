@@ -207,32 +207,54 @@ export class Report {
 
   public addRow (sheetName: string, templetSheet: string,
                  templetRow: number, rowNumber?: number): number {
-    if (this.rows.get(sheetName) == undefined) {
+    let rows = this.rows.get(sheetName);
+    if (rows == undefined) {
       if (rowNumber == undefined) {
         this.rows.set(sheetName, [[templetSheet, "" + templetRow]]);
       } else {
         this.rows.set(sheetName, [[templetSheet, "" + templetRow]]);
       }
+      return 1;
     } else {
-      this.rows.get(sheetName).push([templetSheet, "" + templetRow]);
+      rows.push([templetSheet, "" + templetRow]);
+      return rows.length;
     }
-    return this.rows.get(sheetName).length;
   }
 
   public setRowHeight (sheetName: string, row: number, height: number) {
-    this.rows.get(sheetName)[row - 1][2] = "" + height;
+    let rows = this.rows.get(sheetName);
+    if (rows != undefined) {
+      rows[row - 1][2] = "" + height;
+    } else {
+      throw new Error ("setRowHeight Error, no sheet name: " + sheetName);
+    }
   }
 
   public setRowHide (sheetName: string, row: number) {
-    this.rows.get(sheetName)[row - 1][3] = "";
+    let rows = this.rows.get(sheetName);
+    if (rows != undefined) {
+      rows[row - 1][3] = "";
+    } else {
+      throw new Error ("setRowHide Error, no sheet name: " + sheetName);
+    }
   }
 
   public setRowPageBreak (sheetName: string, row: number) {
-    this.rows.get(sheetName)[row - 1][4] = "";
+    let rows = this.rows.get(sheetName);
+    if (rows != undefined) {
+      rows[row - 1][4] = "";
+    } else {
+      throw new Error ("setRowPageBreak Error, no sheet name: " + sheetName);
+    }
   }
 
   public setRowReplaceMode (sheetName: string, row: number, replace: string) {
-    this.rows.get(sheetName)[row - 1][5] = replace;
+    let rows = this.rows.get(sheetName);
+    if (rows != undefined) {
+      rows[row - 1][5] = replace;
+    } else {
+      throw new Error ("setRowReplaceMode Error, no sheet name: " + sheetName);
+    }
   }
 
   private prepareSetCellConfig (sheetName: string, row: number, col: number) {
@@ -243,7 +265,9 @@ export class Report {
       this.cells.set(sheetName, rows);
     } else {
       let rows = this.cells.get(sheetName);
-      if (rows[row - 1] == undefined) {
+      if (rows == undefined) {
+        throw new Error ("prepareSetCellConfig Error, no sheet name: " + sheetName);
+      } else if (rows[row - 1] == undefined) {
         let r: string[][] = [];
         r[col - 1] = [];
         rows[row - 1] = r;
@@ -263,7 +287,9 @@ export class Report {
       this.cellsValue.set(sheetName, rows);
     } else {
       let rows = this.cellsValue.get(sheetName);
-      if (rows[row - 1] == undefined) {
+      if (rows == undefined) {
+        throw new Error ("prepareSetCellValue Error, no sheet name: " + sheetName);
+      } else if (rows[row - 1] == undefined) {
         rows[row - 1] = [];
       }
     }
@@ -296,7 +322,11 @@ export class Report {
                          templetSheet: string, templetCellRow: number,
                          templetCellCol: number) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellTemplet Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     cell[0] = templetSheet;
     cell[1] = this.coordinatesToCellName(templetCellRow, templetCellCol);
   }
@@ -304,14 +334,22 @@ export class Report {
   public setCellName (sheetName: string, row: number, col: number,
                       name: string) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellName Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     cell[2] = name;
   }
 
   public setCellMerge (sheetName: string, row: number, col: number,
                        mergeCellRow: number, mergeCellCol: number) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellMerge Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     cell[3] = this.coordinatesToCellName(mergeCellRow, mergeCellCol);
   }
 
@@ -320,7 +358,11 @@ export class Report {
                          templetCellCol: number, x_offset: number,
                          y_offset: number) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellPicture Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     let picCell = this.coordinatesToCellName(templetCellRow, templetCellCol);
     const sep = Report.SeparatorValue;
     cell[4] = this.escapeString(templetSheet, sep) + sep +
@@ -330,14 +372,22 @@ export class Report {
   public setCellComment (sheetName: string, row: number, col: number,
                          comment: string) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellComment Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     cell[5] = comment;
   }
 
   public setCellReplaceMode (sheetName: string, row: number, col: number,
                              replace: string | string[]) {
     this.prepareSetCellConfig(sheetName, row, col);
-    let cell = this.cells.get(sheetName)[row - 1][col - 1];
+    let cells = this.cells.get(sheetName);
+    if (cells == undefined) {
+      throw new Error("setCellReplaceMode Error, no sheet: " + sheetName);
+    }
+    let cell = cells[row - 1][col - 1];
     if (replace instanceof Array) {
       let res = "";
       replace.forEach((r, i, a) => {
@@ -369,28 +419,44 @@ export class Report {
     } else {
       res = str;
     }
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellValueString error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeString + res;
   }
 
   public setCellValueBool (sheetName: string, row: number, col: number,
                            bool: boolean) {
     this.prepareSetCellValue(sheetName, row);
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellValueBool error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeBool + bool;
   }
 
   public setCellValueNumber (sheetName: string, row: number, col: number,
                              number: number) {
     this.prepareSetCellValue(sheetName, row);
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellValueNumber error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeNumber + number;
   }
 
   public setCellValueDate (sheetName: string, row: number, col: number,
                            date: Date) {
     this.prepareSetCellValue(sheetName, row);
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellValueDate error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       `${Report.CellValueTypeDate}${date.getFullYear()}-` +
       `${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:` +
       `${date.getMinutes()}:${date.getSeconds()}`;
@@ -399,7 +465,11 @@ export class Report {
   public setCellFormula (sheetName: string, row: number, col: number,
                          formula: string) {
     this.prepareSetCellValue(sheetName, row);
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellFormula error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeFormula + formula;
   }
 
@@ -407,14 +477,22 @@ export class Report {
                            display: string, link: string) {
     this.prepareSetCellValue(sheetName, row);
     const sep = Report.SeparatorValue;
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("setCellHyperlink error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeHyperLink + this.escapeString(display, sep) + sep +
       this.escapeString(link, sep, true);
   }
 
   public clearCellValue (sheetName: string, row: number, col: number) {
     this.prepareSetCellValue(sheetName, row);
-    this.cellsValue.get(sheetName)[row - 1][col - 1] =
+    let values = this.cellsValue.get(sheetName);
+    if (values == undefined) {
+      throw new Error ("clearCellValue error, no sheet: " + sheetName);
+    }
+    values[row - 1][col - 1] =
       Report.CellValueTypeClear;
   }
 
