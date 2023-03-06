@@ -202,10 +202,7 @@ export class Elem {
   }
 
   /** 用于Layout.draw()在调整页面时需要快速获取data的tokenPageEnd */
-  public getTokenPageEnd (): Elem {
-    if (this._tokenPageEnd == undefined) {
-      throw new Error ("getTokenPageEnd error: no tokenPageEnd");
-    }
+  public getTokenPageEnd (): Elem | undefined {
     return this._tokenPageEnd;
   }
 }
@@ -798,6 +795,9 @@ export class Layout {
     let hgtStd = this._config.pageHgtStd;
     let hgtMax = this._config.pageHgtMax;
     let tokenPageEnd = page[idxE - 1].getTokenPageEnd();
+    if (tokenPageEnd == undefined) {
+      throw new Error ("replacePageEndDatas error: no tokenPageEnd");
+    }
     let end = this._config.otherEnd;
     let maxBeRplacedNumber = 0;
     while (true) { // 仅仅替换data，并保证tokenTitle下还有一个data
