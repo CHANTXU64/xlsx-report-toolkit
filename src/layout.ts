@@ -59,7 +59,7 @@ export class Elem {
   protected _name: string;
   protected _type: ElemType;
   protected _cusHgt: boolean = false;
-  protected _tokenPageEnd: Elem = new Elem(ElemType.tokenPageEnd, 0, 0, []);
+  protected _tokenPageEnd: Elem | undefined;
 
   /** heightAdjOrd 默认以type准: empty与data为0, 其余为-1, 越大越先调整
    *  默认adjust max为[0, 0], 第一个为reduce, 第二个为increase
@@ -203,6 +203,9 @@ export class Elem {
 
   /** 用于Layout.draw()在调整页面时需要快速获取data的tokenPageEnd */
   public getTokenPageEnd (): Elem {
+    if (this._tokenPageEnd == undefined) {
+      throw new Error ("getTokenPageEnd error: no tokenPageEnd");
+    }
     return this._tokenPageEnd;
   }
 }
