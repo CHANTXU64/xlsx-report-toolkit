@@ -21,6 +21,7 @@ export class GetData {
     const origDatas: origRow[] = csv_parse(csv, {
                                           columns: true,
                                           skip_empty_lines: true,
+                                          bom: true,
                                           // skip_records_with_empty_values: 
                                           skip_records_with_error: false
     });
@@ -96,8 +97,7 @@ export class GetData {
     let datas: D[] = [];
     origDatas.forEach(row => {
       let d = new dataType();
-      for (let col_name in row) {
-        col_name = col_name.replace(/^\uFEFF/, '');
+      for (const col_name in row) {
         let key: (keyof D) = col_name;
         if (headers != undefined && headers.hasOwnProperty(col_name)) {
           key = headers[col_name];
