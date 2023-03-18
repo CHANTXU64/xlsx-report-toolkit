@@ -1,6 +1,11 @@
 import * as lz4 from 'lz4';
 import { parse as csv_parse } from 'csv-parse/sync';
 
+export interface Table {
+  name: string;
+  data: Buffer;
+}
+
 /** data type support string, number, boolean, Date */
 export interface Data {[id: string]: any};
 
@@ -16,6 +21,7 @@ export class GetData {
     const origDatas: origRow[] = csv_parse(csv, {
                                           columns: true,
                                           skip_empty_lines: true,
+                                          ltrim: true,
                                           // skip_records_with_empty_values: 
                                           skip_records_with_error: false
     });
@@ -27,6 +33,62 @@ export class GetData {
                                                headers?: Headers): D[] {
     let csv = lz4.decode(compress_csv);
     return this.getFromCsv(csv, dataType, headers);
+  }
+
+  public static splitTables (buffer: Buffer, delimiter: string): Table[] {
+  const tables: Table[] = [];
+  let startIdx = 0;
+
+  while (true) {
+    const delimiterIdx = buffer.indexOf(delimiter, startIdx);
+    if (delimiterIdx === -1) break;
+
+    const tableName = buffer.subarray(startIdx, delimiterIdx).toString("utf-8");
+    const dataStartIdx = delimiterIdx + delimiter.length;
+    const nextDelimiterIdx = buffer.indexOf(delimiter, dataStartIdx);
+    const dataEndIdx =
+      nextDelimiterIdx === -1 ? buffer.length : nextDelimiterIdx;
+
+    tables.push({
+      name: tableName,
+      data: buffer.subarray(dataStartIdx, dataEndIdx),
+    });
+
+    startIdx = dataEndIdx + delimiter.length;
+  }
+
+  return tables;
+}
+
+  public static splitTables2 (buffer: Buffer, delimiter: string): Table[] {
+    let tables: Table[] = [];
+    let curTable: Table | null = null;
+    let startIdx = 0;
+
+    for (let i = 0; i < buffer.length; i++) {
+      if (buffer.toString("utf-8", i, i + delimiter.length) === delimiter) {
+        if (curTable !== null) {
+          // 当前表格结束
+          curTable.data = buffer.subarray(startIdx, i);
+          tables.push(curTable);
+        }
+
+        // 新表格开始
+        const tableName = buffer
+        .toString("utf-8", startIdx, i)
+        .replace(/\r?\n|\r/g, "");
+        curTable = { name: tableName, data: Buffer.alloc(0) };
+        startIdx = i + delimiter.length;
+      }
+    }
+
+    if (curTable !== null) {
+      // 最后一个表格
+      curTable.data = buffer.subarray(startIdx);
+      tables.push(curTable);
+    }
+
+    return tables;
   }
 
   private static transtoData<D extends Data> (origDatas: origRow[],
