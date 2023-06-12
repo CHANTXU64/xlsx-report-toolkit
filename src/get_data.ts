@@ -1,4 +1,3 @@
-import * as lz4 from 'lz4';
 import { parse as csv_parse } from 'csv-parse/sync';
 
 export interface Table {
@@ -26,13 +25,6 @@ export class GetData {
                                           skip_records_with_error: false
     });
     return this.transtoData(origDatas, dataType, headers);
-  }
-
-  public static getFromCsvLz4<D extends Data> (compress_csv: Buffer,
-                                               dataType: new() => D,
-                                               headers?: Headers): D[] {
-    let csv = lz4.decode(compress_csv);
-    return this.getFromCsv(csv, dataType, headers);
   }
 
   public static splitTables (buffer: Buffer, delimiter: string): Table[] {
