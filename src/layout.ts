@@ -68,6 +68,9 @@ export class Elem {
   constructor (type: ElemType, tmpltRowStart: number, tmpltRowEnd: number,
                heights: number[], hgtAdjMax: [number, number] = [0, 0],
                heightAdjOrd?: number, name?: string) {
+    if (heights.length == 0) {
+      throw new Error("Elem heights get error: " + type);
+    }
     if (name != undefined) {
       this._name = name;
     } else {
@@ -166,6 +169,9 @@ export class Elem {
       tmpltRowEnd = this._rows[this._rows.length - 1].tmpltRowNumber + 1;
     }
     let height = this._rows.map(row => row.height);
+    if (height.length == 0) {
+      height = [0];
+    }
     let newElem = new Elem(this._type, tmpltRowStart, tmpltRowEnd, height,
                            [this._hgtAdjMaxRdc, this._hgtAdjMaxInc],
                            this.heightAdjOrd, this.name);
@@ -212,7 +218,7 @@ export type Page = Elem[];
 export class DataToken {
   protected _title: Elem;
   protected _data: Elem | DataToken[];
-  protected _empty: Elem = new Elem(ElemType.empty, 0, 0, []);
+  protected _empty: Elem = new Elem(ElemType.empty, 0, 0, [0]);
   protected _pageEnd: Elem;
   protected _end: Elem;
   protected _emptyVisible: boolean = true;
@@ -506,6 +512,11 @@ export class Layout {
       } else {
         break;
       }
+    }
+    if (idx === idxS) {
+      console.error("Error: ", idx, page.slice(idxS, idxS + 1), hgtStd, hgtMax,
+                    page.slice(idxS + 1, idxS + 2));
+      throw Error("Error: moveIdxEndUntilPageBottom");
     }
     return idx;
   }

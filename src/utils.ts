@@ -1,5 +1,7 @@
-// import { Report } from "./report";
+import * as fs from 'fs';
 import * as child from 'child_process';
+
+export class XlsxHeights {[id: string]: number[]};
 
 export class Utils {
   public static getSumFormula (colNum: number, rowNumbers: number[]): string {
@@ -27,12 +29,20 @@ export class Utils {
     return sum;
   }
 
-  public static getHeights (xlsx: string, sheet: string) {
-    const res = child.execFileSync("get-sheet-heights",
-                                      ["-xlsx-file", xlsx, "-sheet", sheet]);
-    const str = res.toString();
-    const heights = str.split(",").map(s => Number(s));
-    return heights;
+  public static getHeights (path: string): XlsxHeights {
+    let file: Buffer;
+    try {
+      file = fs.readFileSync(path);
+    } catch (e) {
+      return {};
+    }
+    let j: {[id: string]: string} = JSON.parse(file.toString());
+    let res: XlsxHeights = {};
+    for (let i in j) {
+      let r = j[i].split(",").map(s => Number(s));
+      res[i] = r;
+    }
+    return res;
   }
 
   // 向右移位
