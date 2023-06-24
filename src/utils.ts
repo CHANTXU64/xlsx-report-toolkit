@@ -140,13 +140,5 @@ export class Utils {
     string_merge = string_merge.replace(/、$/, '');
     return string_merge;
   }
-
-  public static addZeroBeforeNum (num: number, length: number): string {
-    let str = "" + num;
-    while (str.length < length) {
-      str = "0" + str;
-    }
-    return str;
-  }
 }
 
