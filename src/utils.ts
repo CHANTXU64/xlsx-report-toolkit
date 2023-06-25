@@ -140,5 +140,18 @@ export class Utils {
     string_merge = string_merge.replace(/、$/, '');
     return string_merge;
   }
+
+  public static checkConsistency<T> (arr: T[]): boolean {
+    if (arr.length === 0) {
+      return true;
+    }
+    const firstElement = arr[0];
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] !== firstElement) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
