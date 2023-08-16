@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "bignumber.js": "^9.1.1",
-    "csv-parse": "^5.3.6"
+    "csv-parse": "^5.3.6",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
     "ts-node": "^10.9.1"

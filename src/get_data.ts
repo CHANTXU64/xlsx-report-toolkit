@@ -1,4 +1,5 @@
 import { parse as csv_parse } from 'csv-parse/sync';
+import * as XLSX from 'xlsx';
 
 export interface Table {
   name: string;
@@ -14,6 +15,14 @@ type origRow = {[id: string]: string};
 export type Headers = {[id: string]: string};
 
 export class GetData {
+  public static getFromXlsx<D extends Data> (xlsx: Buffer,
+                                             dataType: new() => D,
+                                             headers?: Headers): D[] {
+    let x = XLSX.read(xlsx);
+    let csv = XLSX.utils.sheet_to_csv(x.Sheets[x.SheetNames[0]]);
+    return this.getFromCsv(new Buffer(csv), dataType, headers);
+  }
+
   public static getFromCsv<D extends Data> (csv: Buffer,
                                             dataType: new() => D,
                                             headers?: Headers): D[] {

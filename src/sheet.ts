@@ -50,7 +50,7 @@ export abstract class Sheet {
     this.__page = page;
   }
 
-  public makePage () {
+  public makePage (): number {
     let page = this.__page;
     page.forEach(elem => {
       if (elem.type == Lo.ElemType.firstTitle) {
@@ -79,6 +79,7 @@ export abstract class Sheet {
       })
     });
     this._setSheetHeaderAndFooter();
+    return this._totalPageNum;
   }
 
   /** @returns insert page break success */
