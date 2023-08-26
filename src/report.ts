@@ -117,6 +117,19 @@ export class Report {
     this.sheets[index] = [name, templet];
   }
 
+  public insertSheetAfter (name: string, templet: string = "",
+                           after: string = ""): number {
+    let afterIdx = -1;
+    if (after !== "") {
+      afterIdx = this.getSheetIndex(after);
+    }
+    if (afterIdx == -1) {
+      afterIdx = this.getSheetCount() - 1;
+    }
+    this.sheets.splice(afterIdx + 1, 0, [name, templet]);
+    return afterIdx + 1;
+  }
+
   public getSheetCount (): number {
     return this.sheets.length;
   }
@@ -415,7 +428,7 @@ export class Report {
         if (!isLastItem) {
           res += "/";
         }
-      })
+      });
     } else {
       res = str;
     }
