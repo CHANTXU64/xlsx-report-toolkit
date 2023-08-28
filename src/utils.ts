@@ -153,5 +153,35 @@ export class Utils {
     }
     return true;
   }
+
+  public static addOneMonth (date: Date): Date {
+    const newDate = new Date(date.getTime());
+    let month = newDate.getMonth();
+    newDate.setMonth(month + 1); // 增加一个月
+    let newYear = newDate.getFullYear();
+    let newMonth = newDate.getMonth();
+    if (newMonth < month + 1) {
+      newDate.setDate(date.getDate());
+    } else if (newMonth > month + 1) {
+      if (this.isLeapYear(newYear)) {
+        newDate.setMonth(month + 1, 29);
+      } else {
+        newDate.setMonth(month + 1, 28);
+      }
+    }
+    if (date.getDate() === this.daysInMonth(date) &&
+        date.getDate() > this.daysInMonth(newDate)) {
+      newDate.setDate(this.daysInMonth(newDate));
+    }
+    return newDate;
+  }
+
+  private static isLeapYear (year: number): boolean {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  }
+
+  private static daysInMonth (date: Date): number {
+    return 32 - new Date(date.getFullYear(), date.getMonth(), 32).getDate();
+  };
 }
 
