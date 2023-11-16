@@ -1,5 +1,6 @@
 import { Report } from "./report";
 import * as Lo from "./layout";
+import {Utils} from "./utils";
 
 export abstract class Sheet {
   private __rpt: Report;
@@ -14,6 +15,8 @@ export abstract class Sheet {
   private __tokenRows: number[] = [];
   private __totalRows: number[] = [];
   private __rows: Lo.ElemType[] = [];
+  private __endCalledId: number = -1;
+  private __endRowNumS: number = -1;
 
   protected get _rpt () {return this.__rpt};
   protected get _sheet () {return this.__sheet};
@@ -114,6 +117,7 @@ export abstract class Sheet {
   protected _appendTokenTitle (elem: Lo.Elem): [number, number] {
     let res = this.__addElem(elem);
     this.__tokenNumber++;
+    this.__pageRows = [];
     this.__tokenRows = [];
     return res;
   }
@@ -136,28 +140,61 @@ export abstract class Sheet {
   /** @returns start row number, end row number */
   protected _appendPageEnd (elem: Lo.Elem): [number, number] {
     let res = this.__addElem(elem);
+    this.__endRowNumS = res[0];
+    this.__endCalledId = 0;
     return res;
   }
 
   /** @returns start row number, end row number */
   protected _appendTokenEnd (elem: Lo.Elem): [number, number] {
     let res = this.__addElem(elem);
+    this.__endRowNumS = res[0];
+    this.__endCalledId = 1;
     return res;
   }
 
   /** @returns start row number, end row number */
   protected _appendOtherEnd (elem: Lo.Elem): [number, number] {
     let res = this.__addElem(elem);
+    this.__endRowNumS = res[0];
+    this.__endCalledId = 2;
     return res;
   }
 
   /** @returns start row number, end row number */
   protected _appendLastEnd (elem: Lo.Elem): [number, number] {
     let res = this.__addElem(elem);
+    this.__endRowNumS = res[0];
+    this.__endCalledId = 3;
     return res;
   }
 
   protected _setSheetHeaderAndFooter (): void {}
+
+  /**
+   * at tokenEnd, pageEnd, lastEnd
+   * row 为该end起始行开始的第n行
+   * */
+  protected _autoSumAtEnd (colNums: number[], row: number) {
+    if (this.__endCalledId == 0) {
+      this._autoSumAtEnd_main(this._pageRows, colNums, row);
+    } else if (this.__endCalledId == 1) {
+      this._autoSumAtEnd_main(this._tokenRows, colNums, row);
+    } else if (this.__endCalledId == 3) {
+      this._autoSumAtEnd_main(this._totalRows, colNums, row);
+    } else {
+      console.error("_autoSumAtEnd is called from an unknow function");
+    }
+  }
+
+  private _autoSumAtEnd_main (rows: number[], colNums: number[], row: number) {
+    for (let i = 0; i < colNums.length; ++i) {
+      let column = colNums[i];
+      let formula = Utils.getSumFormula(column, rows);
+      this._rpt.setCellFormula(this._sheet, this.__endRowNumS + row - 1,
+                               column, formula);
+    }
+  }
 
   /** @returns start row number, end row number */
   private __addElem (elem: Lo.Elem): [number, number] {

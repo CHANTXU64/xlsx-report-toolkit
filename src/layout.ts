@@ -406,7 +406,6 @@ export class Layout {
                            dataHgt: DataHgt): boolean {
     let thisTkPage: Page = [];
     let empty: boolean = true;
-    thisTkPage.push(tokenConfig.title.clone());
     if (!dataHgt.isNotDeep()) {
       if (tokenConfig.array) { // data 为[(Elem, ConfigDataToken..)[]]之类
         for (let i = 0; i < dataHgt.length(); ++i) {
@@ -421,7 +420,6 @@ export class Layout {
       empty = this.pushDataElem(thisTkPage, tokenConfig.data,
                                 tokenConfig.pageEnd, dataHgt) && empty;
     } else {throw new Error("Push data token failed, data match failed! #02");}
-    thisTkPage.push(tokenConfig.end.clone());
     if (tokenConfig.emptyVisible || !empty) {
       page.push(...thisTkPage);
     }
@@ -433,12 +431,16 @@ export class Layout {
                                dataHgt: DataHgt): boolean {
     let empty = true;
     if (config.data instanceof Elem) {
+      page.push(config.title.clone());
       empty = this.pushDataElem(page, config.data, config.pageEnd, dataHgt);
+      page.push(config.end.clone());
     } else {
+      page.push(config.title.clone());
       for (let i = 0; i < config.data.length; ++i) {
         empty = this.pushDataToken(page, config.data[i],
                                    dataHgt.index(i)) && empty;
       }
+      page.push(config.end.clone());
     }
     return empty;
   }
