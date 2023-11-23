@@ -121,7 +121,11 @@ export class GetData {
         return value === "true" || value === "1" || value === "True";
       case "object":
         if (defaultValue instanceof Date) {
-          return new Date(value);
+          if (value === "") {
+            return new Date(0); // TODO
+          } else {
+            return new Date(value);
+          }
         }
     }
     return value;

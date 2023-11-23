@@ -5,4 +5,5 @@ export * from './report';
 export * from './process_data';
 export * from './number';
 export * as Lo from './layout';
+export * from './write_csv';
 
