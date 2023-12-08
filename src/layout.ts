@@ -613,8 +613,8 @@ export class Layout {
       return -1;
     }
     let minAdjTimesAndDist: [number[], number, number] =
-      [...this.autoAdjHgt(curSinglePage, hgtStd, hgtMax), 0];
-    let minSinglePage = curSinglePage.slice();
+      [...this.autoAdjHgt(curSinglePage.concat(...replaceElems), hgtStd, hgtMax), 0];
+    let minSinglePage = curSinglePage.concat(...replaceElems);
     let lastDist = Number.MAX_VALUE;
     for (let i = 1; i <= maxBeRplacedNumber; ++i) {
       let tarSinglePage = curSinglePage.slice(0, -1 * i);
@@ -681,7 +681,7 @@ export class Layout {
     switch (page[idxE - 1].type) {
 
       // 不允许token title 在页面最后一行，通过增加该页面行高把title放到下一页
-      // TODO
+      // TODO 还可以减小行高强行放
       case ElemType.tokenTitle:
         page.splice(idxE - 1, 0, config.otherEnd.clone());
         break;
@@ -695,8 +695,21 @@ export class Layout {
       case ElemType.tokenEnd:
         let nextElem = page[idxE]; // TODO 还需判断倒数第二个是否为data类型
         if (nextElem.type == ElemType.lastEnd) {
+          // 最后一个元素是lastEnd，那么，要么缩减高度强行放下lastEnd，要么将这页一些元素放到下页
+          switch (page[idxE - 2].type) { // TODO TODO
+            case ElemType.data:
+              break;
+            case ElemType.empty:
+              break;
+            case ElemType.lastEnd:
+              break;
+            default:
+          }
           idxE = idxE - 1;
           page.splice(idxE - 1, 0, config.otherEnd.clone());
+        } else { // 因为在moveIdxEndUntilPageBottom中已经加入otherEnd测量过，可以插入而不超
+          page.splice(idxE, 0, config.otherEnd.clone());
+          idxE++;
         }
         break;
 

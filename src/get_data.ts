@@ -124,7 +124,17 @@ export class GetData {
           if (value === "") {
             return new Date(0); // TODO
           } else {
-            return new Date(value);
+            let res = new Date(value);
+            if (isNaN(res.getTime())) {
+              res = new Date("2000-01-01 " + value); // Time
+              if (isNaN(res.getTime())) {
+                return res; // TODO
+              } else {
+                return res;
+              }
+            } else {
+              return res;
+            }
           }
         }
     }

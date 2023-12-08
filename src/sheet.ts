@@ -17,6 +17,7 @@ export abstract class Sheet {
   private __rows: Lo.ElemType[] = [];
   private __endCalledId: number = -1;
   private __endRowNumS: number = -1;
+  private __dataIdx: number = 0;
 
   protected get _rpt () {return this.__rpt};
   protected get _sheet () {return this.__sheet};
@@ -29,6 +30,8 @@ export abstract class Sheet {
   protected get _tokenRows () {return this.__tokenRows.slice()};
   protected get _totalRows () {return this.__totalRows.slice()};
   protected get _rows () {return this.__rows.slice()};
+  /** 用于在tokenEnd和lastEnd判断是否完成了所有data，因为layout可能会产生bug */
+  protected get _dataIdx () {return this.__dataIdx};
 
   protected get _totalPageNum () {
     if (this.__totalPageNum == -1) {
@@ -119,6 +122,7 @@ export abstract class Sheet {
     this.__tokenNumber++;
     this.__pageRows = [];
     this.__tokenRows = [];
+    this.__dataIdx = 0;
     return res;
   }
 
@@ -128,6 +132,7 @@ export abstract class Sheet {
     this.__pageRows.push(res[0]);
     this.__tokenRows.push(res[0]);
     this.__totalRows.push(res[0]);
+    this.__dataIdx++;
     return res;
   }
 
