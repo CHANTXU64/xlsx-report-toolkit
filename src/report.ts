@@ -211,6 +211,10 @@ export class Report {
       this.escapeString(evenFooter, sep, true);
   }
 
+  public setSheetFreeze (name: string, cell: string) {
+    this.sheets[this.getSheetIndex(name)][10] = cell;
+  }
+
   private prepareSetSheetConf (name: string) {
     let conf = this.sheets[this.getSheetIndex(name)];
     if (conf == undefined) {
@@ -563,6 +567,7 @@ export class Report {
     if (sheetConfig[7] != undefined) str_arr.push("W" + sheetConfig[7]);
     if (sheetConfig[8] != undefined) str_arr.push("h" + sheetConfig[8]);
     if (sheetConfig[9] != undefined) str_arr.push("f" + sheetConfig[9]);
+    if (sheetConfig[10] != undefined) str_arr.push("F" + sheetConfig[10]);
     for (let i = 0; i < str_arr.length; ++i) {
       let isLastItem = (i == str_arr.length - 1);
       str += this.escapeString(str_arr[i], Report.SeparatorInfo, isLastItem);
